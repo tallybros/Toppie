@@ -1,5 +1,5 @@
 const https = require('https');
-const BOT   = require('../bot.config');
+const BOT   = require('./bot.config');
 
 const SYSTEM_PROMPT = BOT.prompt + (BOT.knowledge ? `\n\n---\n\n## KNOWLEDGE BASE\n\n${BOT.knowledge}` : '');
 const API   = BOT.api   || 'anthropic';
@@ -34,8 +34,16 @@ async function callOpenAI(messages, apiKey) {
     instructions: SYSTEM_PROMPT,
     input:        messages,
   };
+
+  const tools = [];
   if (BOT.webSearch) {
-    body.tools = [{ type: 'web_search_preview' }];
+    tools.push({ type: 'web_search_preview' });
+  }
+  if (BOT.vectorStoreId) {
+    tools.push({ type: 'file_search', vector_store_ids: [BOT.vectorStoreId] });
+  }
+  if (tools.length > 0) {
+    body.tools = tools;
   }
   const payload = JSON.stringify(body);
   const result  = await httpsPost('api.openai.com', '/v1/responses', payload, {
