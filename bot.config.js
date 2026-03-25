@@ -12,7 +12,7 @@ module.exports = {
 
   // --- API & Model ---
   api:   "openai",              // "anthropic" or "openai"
-  model: "gpt-4o",
+  model: "gpt-4o-mini",
   // Anthropic models: claude-haiku-4-5-20251001 | claude-sonnet-4-6 | claude-opus-4-6
   // OpenAI models:    gpt-4o-mini | gpt-4o
 
